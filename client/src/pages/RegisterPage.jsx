@@ -18,7 +18,12 @@ function Register() {
   const navigate = useNavigate();
 
   const onSubmit = async (value) => {
-    await signup(value);
+    try {
+      await signup(value); // Ejecuta la función de registro desde el contexto
+      navigate("/login"); // Redirige al usuario al login si fue exitoso
+    } catch (error) {
+      console.error("Error during registration:", error);
+    }
   };
 
   useEffect(() => {
@@ -79,7 +84,7 @@ function Register() {
           <Button>Submit</Button>
         </form>
         <p>
-          Already Have an Account?
+          Already Have an Account?{" "}
           <Link className="text-sky-500" to="/login">
             Login
           </Link>

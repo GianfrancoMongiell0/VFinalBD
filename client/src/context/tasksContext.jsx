@@ -50,13 +50,31 @@ export function TaskProvider({ children }) {
     }
   };
 
-  const updateTask = async (id, task) => {
-    try {
-      await updateTaskRequest(id, task);
-    } catch (error) {
-      console.error(error);
+const updateTask = async (id, updatedTask) => {
+  try {
+    const response = await fetch(`/api/tasks/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedTask),
+    });
+
+    if (!response.ok) {
+      throw new Error("No se pudo actualizar la tarea");
     }
-  };
+
+    const updatedData = await response.json();
+
+    // Actualiza el estado global de tareas
+    setTasks((prevTasks) =>
+      prevTasks.map((task) => (task._id === id ? updatedData : task))
+    );
+  } catch (error) {
+    console.error("Error al actualizar la tarea:", error);
+    throw error;
+  }
+};
 
   return (
     <TaskContext.Provider
